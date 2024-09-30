@@ -41,15 +41,13 @@ while game_on:
             snake.head.position()[0] < -280 or
             snake.head.position()[1] < -280 or
             snake.head.position()[1] > 280):
-        board.game_over()
-        game_on = False
+        board.reset()
+        snake.reset()
 
     #Detect collision head with tail
     for segment in snake.snake[1:]:
         if snake.head.distance(segment) < 10:
-            game_on = False
-            board.game_over()
-
-
+            board.reset()
+            snake.reset()
 
 screen.exitonclick()

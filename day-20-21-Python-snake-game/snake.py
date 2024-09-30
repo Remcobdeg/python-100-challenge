@@ -50,4 +50,12 @@ class Snake:
         if self.head.heading() != LEFT:
             self.head.setheading(RIGHT)
 
+    def reset(self):
+        #move old snake off the screen
+        for seg in self.snake:
+            seg.goto(1000,1000)
+        self.snake.clear()
+        self.make_snake()
+        self.head = self.snake[0]
+
 
