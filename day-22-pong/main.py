@@ -61,13 +61,5 @@ while game_on:
     ball.move()
     screen.update()
 
-#TODO: 2 create + move player bar
-#TODO: 3 create second bar
-#TODO: 4 create ball
-#TODO: 5 bounce ball on wall
-#TODO: 6 bounce ball on paddle
-#TODO: 7 detect miss
-#TODO: 8 keep score
-
 screen.exitonclick()
 
