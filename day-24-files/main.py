@@ -18,3 +18,14 @@ with open("my_text.txt", mode="w") as file:
 with open("my_text.txt", mode="a") as file:
     #mode="a" appends content
     file.write("\nNew text")
+
+
+## reading exercise:
+with open("/Users/b8058356/Desktop/print/test.txt") as file:
+    content = file.read()
+print(content)
+
+## reading exercise 2 (relative path):
+with open("../../../../../../../../Desktop/print/test.txt") as file:
+    content = file.read()
+print(content)
