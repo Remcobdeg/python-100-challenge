@@ -1,7 +1,9 @@
+import json
 from tkinter import *
 from tkinter import messagebox #note, since it's a module and not a class, it is not imported with the previous command
 import random
 import pyperclip
+import json
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
@@ -30,19 +32,25 @@ def save_password():
     user = u_entry.get()
     pw = p_entry.get()
 
-    print([website,user,pw])
+    #store this in JSON format
+    new_data = {
+        website: {
+            "email": user,
+            "password": pw
+        }
+    }
 
     if "" in [website,user,pw]:
         messagebox.showinfo(message="Please complete all fields.", icon="warning")
     else:
-        #ask for confirmation
-        response = messagebox.askokcancel(message=f'The following information will be added: '
-                                               f'\n\nWebsite: {website} \nUser: {user} \n Pw: {pw}',
-                                       title = 'Confirm password storage')
-
-        if response:
-            with open("p_codes.txt", mode="a") as file:
-                file.write(f"{website} | {user} | {pw}\n")
+        # #ask for confirmation
+        # response = messagebox.askokcancel(message=f'The following information will be added: '
+        #                                        f'\n\nWebsite: {website} \nUser: {user} \n Pw: {pw}',
+        #                                title = 'Confirm password storage')
+        #
+        # if response:
+            with open("pw_data.json", mode="w") as file: #note that for json we use WRITE instead of APPEND
+                json.dump(new_data, file, indent=4) #indent=4 expands it for better readability
 
             #clear fields after save
             w_entry.delete(0,'end')
