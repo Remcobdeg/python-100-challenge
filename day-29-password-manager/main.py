@@ -1,9 +1,10 @@
-import json
 from tkinter import *
 from tkinter import messagebox #note, since it's a module and not a class, it is not imported with the previous command
 import random
 import pyperclip
 import json
+
+PW_FILE = "pw_data.json"
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
@@ -43,20 +44,40 @@ def save_password():
     if "" in [website,user,pw]:
         messagebox.showinfo(message="Please complete all fields.", icon="warning")
     else:
-        # #ask for confirmation
-        # response = messagebox.askokcancel(message=f'The following information will be added: '
-        #                                        f'\n\nWebsite: {website} \nUser: {user} \n Pw: {pw}',
-        #                                title = 'Confirm password storage')
-        #
-        # if response:
-            with open("pw_data.json", mode="w") as file: #note that for json we use WRITE instead of APPEND
+        try:
+            with open(PW_FILE, mode="r") as file:
+                data = json.load(file) #provides a dictionary
+        except FileNotFoundError:
+            with open(PW_FILE, mode="w") as file:
                 json.dump(new_data, file, indent=4) #indent=4 expands it for better readability
-
+        else:
+            data.update(new_data)
+            with open(PW_FILE, mode="w") as file:
+                json.dump(data, file, indent=4) #indent=4 expands it for better readability
+        finally:
             #clear fields after save
             w_entry.delete(0,'end')
             u_entry.delete(0,'end')
             u_entry.insert(0, "default@email.com")
             p_entry.delete(0,'end')
+
+# ---------------------------- SEARCH PASSWORD ------------------------------- #
+
+def search_password():
+    website = w_entry.get()
+    try:
+        with open(PW_FILE) as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        messagebox.showinfo(message="There are no stored passwords", icon="warning")
+    else:
+        try:
+            found_data = data[website]
+        except KeyError:
+            messagebox.showinfo(message=f"{website} not found. Did you store the information under a different name? Here are the websites I've got:"
+                  f"\n\n{", ".join([key for key in data])}", icon="warning")
+        else:
+            messagebox.showinfo(message=f"User name: {found_data["email"]}\nPassword: {found_data["password"]}", icon="warning", title=website)
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -71,9 +92,11 @@ canvas.grid(column=2,row=1)
 
 #Website row
 w_label = Label(text="Website:")
-w_entry = Entry(width=35)
+w_entry = Entry()
+search = Button(text="Search", command=search_password, width=13)
 w_label.grid(column=1,row=2)
 w_entry.grid(column=2, columnspan = 2 ,row=2, sticky="W")
+search.grid(column=3,row=2)
 w_entry.focus()
 
 #Username row
