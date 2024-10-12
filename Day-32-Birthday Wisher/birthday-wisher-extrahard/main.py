@@ -12,7 +12,11 @@ import os
 import pandas as pd
 
 # Load the environment variables from the .env file
-load_dotenv('../.env')
+dotenv_path = '../.env'
+if os.path.exists(dotenv_path):
+    load_dotenv('../.env')
+else:
+    raise FileNotFoundError('Please provide a valid .env path')
 
 my_email=os.getenv('EMAIL')
 password=os.getenv('APP_PASSWORD')
@@ -27,13 +31,22 @@ for index, row in birthday_data.iterrows():
         with open('letter_templates/' + random.choice(os.listdir('letter_templates'))) as file:
             letter = file.read().replace('[NAME]', row['name'])
 
-        print(letter)
+        # Construct email message with headers
+        subject = "Happy Birthday!"
+        to_address = row['email']
+        from_address = my_email
+        message = f"Subject:{subject}\nTo:{to_address}\nFrom:{from_address}\n\n{letter}"
+
+        # send letter
+        with smtplib.SMTP("smtp.gmail.com") as connection:
+            connection.starttls()  # making encrypted connection to email server
+            connection.login(user=my_email, password=password)
+            connection.sendmail(from_addr=from_address, to_addrs=to_address,
+                                msg=message)
+
+        print('Email sent!')
 
 
-
-# 3. If step 2 is true, pick a random letter from letter templates and replace the [NAME] with the person's actual name from birthdays.csv
-
-# 4. Send the letter generated in step 3 to that person's email address.
 
 
 
