@@ -3,17 +3,31 @@
 # 1. Update the birthdays.csv
 
 # 2. Check if today matches a birthday in the birthdays.csv
+import smtplib
 import datetime as dt
+import random
+
+from dotenv import load_dotenv
+import os
 import pandas as pd
 
+# Load the environment variables from the .env file
+load_dotenv('../.env')
+
+my_email=os.getenv('EMAIL')
+password=os.getenv('APP_PASSWORD')
+
 birthday_data = pd.read_csv("birthdays.csv")
+today = dt.datetime.now()
 
-# for _, row in birthday_data.iterrows():
-#     print(dt.datetime(day=birthday_data['day'].item(),month=birthday_data['month'].item(),year=birthday_data['year'].item()))
+for index, row in birthday_data.iterrows():
+    if row['day'] == today.day and row['month'] == today.month:
 
-birthday_data['date'] = dt.datetime(day=birthday_data['day'].item(),month=birthday_data['month'].item(),year=birthday_data['year'].item())
-print(birthday_data['date'])
+        #read and personalise letter
+        with open('letter_templates/' + random.choice(os.listdir('letter_templates'))) as file:
+            letter = file.read().replace('[NAME]', row['name'])
 
+        print(letter)
 
 
 
