@@ -28,8 +28,13 @@ for index, row in birthday_data.iterrows():
     if row['day'] == today.day and row['month'] == today.month:
 
         #read and personalise letter
-        with open('letter_templates/' + random.choice(os.listdir('letter_templates'))) as file:
-            letter = file.read().replace('[NAME]', row['name'])
+        try:
+            file = open('letter_templates/' + random.choice(os.listdir('letter_templates')))
+        except FileNotFoundError:
+            print('Please specify correct path to files')
+        else:
+            letter = file.read().replace('[NAME]', row['name']).replace('Angela','Remco')
+            file.close()
 
         # Construct email message with headers
         subject = "Happy Birthday!"
