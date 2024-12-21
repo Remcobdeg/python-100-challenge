@@ -28,6 +28,7 @@ def is_close(lat: float, long: float) -> bool:
 
     #Your position is within +5 or -5 degrees of the ISS position.
     iss_is_close = abs(lat - iss_latitude) <= 5 and abs(long - iss_longitude) <= 5
+    iss_is_close = True
 
     return iss_is_close
 
@@ -48,7 +49,6 @@ def is_dark(lat: float, long: float) -> bool:
         sunrise = randint(2,8)
         sunset = randint(17,23)
     else:
-        print(response.status_code)
         response.raise_for_status()
         data = response.json()
         sunrise = int(data["results"]["sunrise"].split("T")[1].split(":")[0])
@@ -101,7 +101,7 @@ while True:
     else:
         print(f"iss not visible (close = {is_close(MY_LAT, MY_LONG)}, dark = {is_dark(MY_LAT, MY_LONG)})")
 
-    time.sleep(3)
+    time.sleep(60)
 
 
 
