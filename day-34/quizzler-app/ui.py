@@ -1,5 +1,6 @@
 import tkinter as tk
 import os
+from quiz_brain import QuizBrain
 
 THEME_COLOR = "#375362"
 THEME_FONT = 'Arial'
@@ -7,13 +8,22 @@ THEME_FONT = 'Arial'
 app_path = os.path.dirname(__file__)
 
 class QuizInterface:
-    def __init__(self):
+    def __init__(self, quiz_brain: QuizBrain):
+
+        self.quiz = quiz_brain
         self.window = tk.Tk()
         self.window.title("Quizzler")
         self.window.config(padx=20, pady=20, bg=THEME_COLOR)
 
         self.card = tk.Canvas(width=300, height=250, background="white")
-        self.card_text = self.card.create_text(150,125, text='quiz', font=(THEME_FONT, 20, "italic"), fill="black")
+        self.card_text = self.card.create_text(
+            150,
+            125, 
+            width=280,
+            text='quiz', 
+            font=(THEME_FONT, 20, "italic"), 
+            fill="black"
+        )
         self.card.grid(column=1,row=2,columnspan = 2, pady=50)
 
         self.score_count = tk.Label(text="Score: 0", font=(THEME_FONT, 10, "bold"), bg=THEME_COLOR, fg="white")
@@ -27,14 +37,30 @@ class QuizInterface:
         self.true_button = tk.Button(image=true_image, highlightthickness=0, bd=0, command=self.is_true)
         self.true_button.grid(column=1, row=3)
 
+        # start the quiz
+        self.get_next_question()
+
         self.window.mainloop()
 
     def is_true(self):
-        pass
+        self.give_feedback(self.quiz.check_answer("True"))
 
     def is_false(self):
-        pass
+        self.give_feedback(self.quiz.check_answer("False"))
 
+    def give_feedback(self, is_right):
+        if is_right:
+            self.card.config(bg="green")
+        else:
+            self.card.config(bg="red")
+        self.window.after(1000, self.get_next_question)
+
+    def get_next_question(self):
+        if self.quiz.still_has_questions(): 
+            self.card.config(bg="white")
+            self.score_count.config(text=f"Score: {self.quiz.score}")
+            question_text = self.quiz.next_question()
+            self.card.itemconfig(self.card_text, text=question_text)
 
 
 

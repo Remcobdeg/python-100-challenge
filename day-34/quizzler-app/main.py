@@ -31,7 +31,7 @@ for question in question_data:
 
 quiz = QuizBrain(question_bank)
 
-quizInterface = QuizInterface()
+quizInterface = QuizInterface(quiz)
 
 # while quiz.still_has_questions():
 #     quiz.next_question()
