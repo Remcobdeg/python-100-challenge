@@ -56,11 +56,15 @@ class QuizInterface:
         self.window.after(1000, self.get_next_question)
 
     def get_next_question(self):
+        self.card.config(bg="white")
         if self.quiz.still_has_questions(): 
-            self.card.config(bg="white")
             self.score_count.config(text=f"Score: {self.quiz.score}")
             question_text = self.quiz.next_question()
             self.card.itemconfig(self.card_text, text=question_text)
+        else:
+            self.card.itemconfig(self.card_text, text="You've completed the quiz")
+            self.true_button.config(state="disabled")
+            self.false_button.config(state="disabled")
 
 
 
