@@ -3,6 +3,7 @@
 import requests
 import os
 import dotenv
+from twilio.rest import Client
 
 # set wd to current directory
 os.chdir(os.path.dirname(__file__))
@@ -10,6 +11,10 @@ os.chdir(os.path.dirname(__file__))
 # load environment variables
 dotenv.load_dotenv('../.env')
 API_KEY = os.getenv('OPENWEATHER_API_KEY')
+TWILIO_SID = os.getenv('TWILLO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('TWILLO_TOKEN')
+MY_NUMBER = os.getenv('MY_NUMBER')
+TWILLO_WHATSAPP_NUMBER = os.getenv('TWILLO_WHATSAPP_NUMBER')
 
 # get city coordinates
 parameters = {
@@ -48,6 +53,15 @@ for data in response_data["list"]:
             bring_umbrella = False
 
 if bring_umbrella:
-    print("Bring an umbrella")
+    
+    # prepare twilio client
+    client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
 
+    message = client.messages.create(
+        body = "Bring an umbrella! Wet weather is coming.",
+        from_= TWILLO_WHATSAPP_NUMBER,
+        to = MY_NUMBER,
+    )
+
+    print(f"Message status: {message.status}")
 
