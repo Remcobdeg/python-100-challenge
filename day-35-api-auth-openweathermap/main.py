@@ -29,7 +29,8 @@ lon = geo_data[0]["lon"] # -1.6131572
 parameters = {
     "lat": lat,
     "lon": lon,
-    "appid": API_KEY
+    "appid": API_KEY,
+    "cnt": 4 # count of forecasts. 4 * 3 = 12 hours
 }
 
 response = requests.get("https://api.openweathermap.org/data/2.5/forecast", params=parameters)
@@ -38,5 +39,15 @@ response.raise_for_status()
 
 response_data = response.json()
 
-# print response code
-print(response_data["cod"])
+for data in response_data["list"]: 
+    for weather_data in data["weather"]:
+        if weather_data["id"] < 700:
+            bring_umbrella = True
+            break
+        else:
+            bring_umbrella = False
+
+if bring_umbrella:
+    print("Bring an umbrella")
+
+
