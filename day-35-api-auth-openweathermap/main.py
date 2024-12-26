@@ -1,0 +1,1 @@
+#todo retrieve 3-hour weather for my location using OpenWeatherMap API
