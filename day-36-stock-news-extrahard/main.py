@@ -33,17 +33,28 @@ close_day_before_yesterday = float(stock_day_data[day_before_yesterday]["4. clos
 # When STOCK price increase/decreases by 5% between yesterday and the day before yesterday then ...
 percentage_change = (open_yesterday - close_day_before_yesterday) / close_day_before_yesterday * 100
 
-if abs(percentage_change) > 5:
+if abs(percentage_change) > .5:
     print("Get News")
     
 ## STEP 2: Use https://newsapi.org
 # Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME. 
 
-# params = {
-#     "q": COMPANY_NAME,
-#     "from": yesterday,
+params = {
+    "q": COMPANY_NAME,
+    "from": day_before_yesterday,
+    "sortBy": "popularity",
+    "language": "en",
+    "pageSize": 3,
+    "apiKey": NEWS_API_KEY
+}
 
-# https://newsapi.org/v2/everything?q=tesla&from=2024-11-27&sortBy=publishedAt&apiKey=0ce09cb3a5b4432e8ed086d6a9847442
+news_articles = requests.get("https://newsapi.org/v2/everything", params=params)
+news_articles.raise_for_status()
+
+news_articles = news_articles.json()["articles"]
+
+print(news_articles)
+
 
 ## STEP 3: Use https://www.twilio.com
 # Send a separate message with the percentage change and each article's title and description to your phone number. 
