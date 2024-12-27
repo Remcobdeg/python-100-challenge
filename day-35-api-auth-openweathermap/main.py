@@ -14,9 +14,10 @@ TWILIO_AUTH_TOKEN = os.getenv('TWILLO_TOKEN')
 MY_NUMBER = os.getenv('MY_NUMBER')
 TWILLO_WHATSAPP_NUMBER = os.getenv('TWILLO_WHATSAPP_NUMBER')
 
-# get city coordinates
+# get city coordinates (to find a place where it rains: https://www.ventusky.com/)
 parameters = {
-    "q": "Newcastle,GB",
+    # "q": "Newcastle,GB",
+    "q": "Indianapolis,US",
     "appid": API_KEY
 }
 
@@ -61,5 +62,14 @@ if bring_umbrella:
         to = MY_NUMBER,
     )
 
+    # message = client.messages.create(
+    # from_='whatsapp:+14155238886',
+    # content_sid='HXb5b62575e6e4ff6129ad7c8efe1f983e',
+    # content_variables='{"1":"12/1","2":"3pm"}',
+    # to='whatsapp:+447401912373'
+    # )    
+
     print(f"Message status: {message.status}")
 
+else:
+    print("No message sent. No need to bring an umbrella.")
