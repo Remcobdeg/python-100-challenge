@@ -1,14 +1,52 @@
+import requests
+import os
+import dotenv
+
 STOCK = "TSLA"
-COMPANY_NAME = "Tesla Inc"
+COMPANY_NAME = "tesla"
 
-## STEP 1: Use https://www.alphavantage.co
-# When STOCK price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
+# Import API keys from .env file
+dotenv.load_dotenv(".env")
+ALPHAVANTAGE_API_KEY = os.getenv("ALPHAVANTAGE_API_KEY")
+NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
+params = {
+    "function": "TIME_SERIES_DAILY",
+    "symbol": STOCK,
+    "apikey": ALPHAVANTAGE_API_KEY
+}
+
+stock_data = requests.get("https://www.alphavantage.co/query", params=params)
+stock_data.raise_for_status()
+
+stock_day_data = stock_data.json()["Time Series (Daily)"]
+
+# get dates of the stock data
+dates = list(stock_day_data.keys())
+yesterday = dates[0]
+day_before_yesterday = dates[1]
+
+# Get the opening price of the stock for yesterday and the day before yesterday
+open_yesterday = float(stock_day_data[yesterday]["1. open"])
+close_day_before_yesterday = float(stock_day_data[day_before_yesterday]["4. close"])
+
+# When STOCK price increase/decreases by 5% between yesterday and the day before yesterday then ...
+percentage_change = (open_yesterday - close_day_before_yesterday) / close_day_before_yesterday * 100
+
+if abs(percentage_change) > 5:
+    print("Get News")
+    
 ## STEP 2: Use https://newsapi.org
 # Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME. 
 
+# params = {
+#     "q": COMPANY_NAME,
+#     "from": yesterday,
+
+# https://newsapi.org/v2/everything?q=tesla&from=2024-11-27&sortBy=publishedAt&apiKey=0ce09cb3a5b4432e8ed086d6a9847442
+
 ## STEP 3: Use https://www.twilio.com
-# Send a seperate message with the percentage change and each article's title and description to your phone number. 
+# Send a separate message with the percentage change and each article's title and description to your phone number. 
 
 
 #Optional: Format the SMS message like this: 
