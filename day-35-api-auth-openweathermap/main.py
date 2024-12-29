@@ -12,12 +12,12 @@ API_KEY = os.getenv('OPENWEATHER_API_KEY')
 TWILIO_SID = os.getenv('TWILLO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.getenv('TWILLO_TOKEN')
 MY_NUMBER = os.getenv('MY_NUMBER')
-TWILLO_WHATSAPP_NUMBER = os.getenv('TWILLO_WHATSAPP_NUMBER')
+TWILIO_NUMBER = os.getenv('TWILIO_NUMBER')
 
 # get city coordinates (to find a place where it rains: https://www.ventusky.com/)
 parameters = {
     # "q": "Newcastle,GB",
-    "q": "Indianapolis,US",
+    "q": "Detroit,US",
     "appid": API_KEY
 }
 
@@ -58,7 +58,7 @@ if bring_umbrella:
 
     message = client.messages.create(
         body = "Bring an umbrella! Wet weather is coming.",
-        from_= TWILLO_WHATSAPP_NUMBER,
+        from_= TWILIO_NUMBER,
         to = MY_NUMBER,
     )
 
