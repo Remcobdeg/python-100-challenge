@@ -1,6 +1,7 @@
 import requests
 import os
 import dotenv
+import smtplib
 
 STOCK = "TSLA"
 COMPANY_NAME = "tesla"
@@ -56,6 +57,24 @@ if abs(percentage_change) > .5:
     # concatenate all messages
     messages = "\n\n".join(messages)
 
-    print(messages)
+    # PREPARE EMAIL
+
+    my_email=os.getenv('EMAIL')
+    password=os.getenv('APP_PASSWORD')
+
+    # Construct email message with headers
+    subject = f"{STOCK}: {'🔺' if percentage_change > 0 else '🔻'}{abs(percentage_change)}%"
+    to_address = my_email
+    from_address = my_email
+    message = f"Subject:{subject}\nTo:{to_address}\nFrom:{from_address}\n\n{messages}"
+
+    # send letter
+    with smtplib.SMTP("smtp.gmail.com") as connection:
+        connection.starttls()  # making encrypted connection to email server
+        connection.login(user=my_email, password=password)
+        connection.sendmail(from_addr=from_address, to_addrs=to_address,
+                            msg=message)
+
+    print('Email sent!')
 
 
