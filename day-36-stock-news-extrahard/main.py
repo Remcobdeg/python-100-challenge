@@ -49,8 +49,11 @@ if abs(percentage_change) > .5:
     news_articles.raise_for_status()
     news_articles = news_articles.json()["articles"]
 
+    UP = '🔺'
+    DOWN = '🔻'
+
     messages = [
-        f"{STOCK}: {'🔺' if percentage_change > 0 else '🔻'}{abs(percentage_change)}%\nHeadline: {article['title']}\nBrief: {article['description']}"
+        f"{STOCK}: {UP if percentage_change > 0 else DOWN}{abs(percentage_change)}%\nHeadline: {article['title']}\nBrief: {article['description']}"
         for article in news_articles
     ]
 
@@ -63,7 +66,7 @@ if abs(percentage_change) > .5:
     password=os.getenv('APP_PASSWORD')
 
     # Construct email message with headers
-    subject = f"{STOCK}: {'🔺' if percentage_change > 0 else '🔻'}{abs(percentage_change)}%"
+    subject = f"{STOCK}: {UP if percentage_change > 0 else DOWN}{abs(percentage_change)}%"
     to_address = my_email
     from_address = my_email
     message = f"Subject:{subject}\nTo:{to_address}\nFrom:{from_address}\n\n{messages}"
@@ -72,8 +75,11 @@ if abs(percentage_change) > .5:
     with smtplib.SMTP("smtp.gmail.com") as connection:
         connection.starttls()  # making encrypted connection to email server
         connection.login(user=my_email, password=password)
-        connection.sendmail(from_addr=from_address, to_addrs=to_address,
-                            msg=message)
+        connection.sendmail(
+            from_addr=from_address, 
+            to_addrs=to_address,
+            msg=message.encode('utf-8')  # encode the message in utf-8
+        )
 
     print('Email sent!')
 
