@@ -1,0 +1,15 @@
+#red {color: red;}
+#blue {color: blue;}
+#yellow {color: yellow;}
+#green {color: green;}
+#purple {color: purple;}
+#orange {color: orange;}
+
+img {
+  width: 200px;
+  height: 200px;
+}
+
+/* two rules that achieve exactly the same thing */
+h2[class] { font-weight: normal;}
+.color-title { font-weight: normal;}
