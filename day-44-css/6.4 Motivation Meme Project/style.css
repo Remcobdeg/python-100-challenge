@@ -1,0 +1,25 @@
+body {
+    color: white;
+    background-color: #121212;
+    text-align: center;
+}
+
+.libre-baskerville-regular {
+  font-family: "Libre Baskerville", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.motivational-header {
+    text-transform: uppercase;
+}
+
+.motivational-image {
+    border: 5px solid white;
+    width: 100%;
+}
+
+.content-container {
+    width: 50%;
+    margin-left: 25%;
+}
